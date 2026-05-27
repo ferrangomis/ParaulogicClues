@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Control_Chrome__open_url",
+      "mcp__Control_Chrome__get_current_tab",
+      "mcp__Control_Chrome__execute_javascript",
+      "mcp__Claude_in_Chrome__list_connected_browsers",
+      "mcp__Claude_in_Chrome__select_browser",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__javascript_tool",
+      "Bash(node -e ' *)",
+      "Bash(python3 -c \"from PIL import Image; print\\('PIL ok'\\)\")",
+      "Bash(python3 -c \"import cairo; print\\('cairo ok'\\)\")",
+      "Bash(node -e \"require\\('canvas'\\); console.log\\('canvas ok'\\)\")",
+      "Bash(node -e \"require\\('sharp'\\); console.log\\('sharp ok'\\)\")",
+      "Bash(node generate-icons.js)"
+    ]
+  }
+}

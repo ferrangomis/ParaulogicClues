@@ -1,0 +1,188 @@
+/* ── Sidebar container ─────────────────────────────────────────────────── */
+#pistes-sidebar {
+  position: fixed;
+  top: 65px;
+  /* sit just to the right of the 800px-centered game */
+  left: calc(50% + 410px);
+  right: 8px;
+  width: auto;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 14px 16px 18px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 13px;
+  color: #111;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  z-index: 500;
+  box-sizing: border-box;
+  min-width: 200px;
+}
+
+#pistes-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+#pistes-sidebar::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+/* ── Title ─────────────────────────────────────────────────────────────── */
+.pistes-sidebar-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0c030;
+  color: #111;
+}
+
+/* ── Each clue section ─────────────────────────────────────────────────── */
+.pistes-section {
+  margin-bottom: 12px;
+}
+
+.pistes-section:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Table (graella) ───────────────────────────────────────────────────── */
+.pistes-section[data-section="table_graella"] table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 11px;
+  table-layout: fixed;
+}
+
+.pistes-section[data-section="table_graella"] td,
+.pistes-section[data-section="table_graella"] th {
+  width: auto !important; /* override the game's 220px */
+  text-align: center;
+  padding: 2px 3px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+
+.pistes-section[data-section="table_graella"] tr:first-child td,
+.pistes-section[data-section="table_graella"] tr:first-child th,
+.pistes-section[data-section="table_graella"] td:first-child,
+.pistes-section[data-section="table_graella"] th:first-child {
+  font-weight: 700;
+  background: #f8f8f8;
+}
+
+.pistes-section[data-section="table_graella"] tr:last-child td,
+.pistes-section[data-section="table_graella"] td:last-child {
+  font-weight: 600;
+  background: #f8f8f8;
+}
+
+/* ── UL sections (prefixes, suffixes, etc.) ────────────────────────────── */
+.pistes-section ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pistes-section ul b.pistes {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.pistes-section ul li {
+  line-height: 1.5;
+  color: #222;
+}
+
+/* ── Pair list items (prefix2, subconjunts) ────────────────────────────── */
+.pairs-container {
+  line-height: 1.9;
+  word-break: break-word;
+}
+
+.pair-item {
+  display: inline;
+  font-size: 12px;
+}
+
+/* ── Updated count (blue) ──────────────────────────────────────────────── */
+.updated-count {
+  color: #1a6bbf;
+  font-weight: 700;
+}
+
+/* ── Paraules analitzades ──────────────────────────────────────────────── */
+.analisi-list {
+  margin-top: 4px;
+}
+
+.analisi-empty {
+  color: #aaa;
+  font-size: 12px;
+}
+
+.analisi-count {
+  font-weight: 400;
+  color: #888;
+}
+
+.analisi-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 1px 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.analisi-word {
+  font-weight: 700;
+  color: #111;
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.analisi-meta {
+  color: #888;
+  flex: 1;
+}
+
+.analisi-badges {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.badge-tuti, .badge-palindrome, .badge-square {
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 3px;
+  padding: 0 3px;
+  line-height: 1.6;
+}
+
+.badge-tuti {
+  color: #c07000;
+  background: #fff4d6;
+  border: 1px solid #f0c030;
+}
+
+.badge-palindrome {
+  color: #1a6bbf;
+  background: #e8f0fb;
+  border: 1px solid #a0c0ee;
+}
+
+.badge-square {
+  color: #2a8a3a;
+  background: #e6f5e9;
+  border: 1px solid #90cc98;
+}

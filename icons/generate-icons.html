@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Generate Paraulògic Pistes Icons</title>
+  <style>
+    body { font-family: sans-serif; padding: 32px; background: #f5f5f5; }
+    h2 { margin-bottom: 8px; }
+    .previews { display: flex; gap: 24px; align-items: flex-end; margin: 24px 0; }
+    .preview { text-align: center; }
+    .preview p { margin: 6px 0 0; font-size: 12px; color: #666; }
+    canvas { display: block; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    button {
+      margin-top: 8px; padding: 10px 24px; font-size: 14px; cursor: pointer;
+      background: #f0c030; border: none; border-radius: 6px; font-weight: 600;
+    }
+    button:hover { background: #d4a800; }
+  </style>
+</head>
+<body>
+  <h2>Paraulògic Pistes — Icon Generator</h2>
+  <p>Click the button to download all three icon sizes.</p>
+
+  <div class="previews">
+    <div class="preview"><canvas id="c128" width="128" height="128"></canvas><p>128×128</p></div>
+    <div class="preview"><canvas id="c48"  width="48"  height="48"></canvas> <p>48×48</p></div>
+    <div class="preview"><canvas id="c16"  width="16"  height="16"></canvas> <p>16×16</p></div>
+  </div>
+
+  <button onclick="downloadAll()">⬇ Download all icons</button>
+
+  <script>
+    function drawIcon(canvas) {
+      const s = canvas.width;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, s, s);
+
+      const cx = s / 2, cy = s / 2;
+      const r = s * 0.42;
+
+      // ── Hexagon path (pointy-top) ──────────────────────────────────────
+      function hexPath() {
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const a = (Math.PI / 3) * i - Math.PI / 6;
+          const x = cx + r * Math.cos(a);
+          const y = cy + r * Math.sin(a);
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+      }
+
+      // Drop shadow
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.25)';
+      ctx.shadowBlur  = s * 0.08;
+      ctx.shadowOffsetY = s * 0.04;
+      hexPath();
+      ctx.fillStyle = '#f0c030';
+      ctx.fill();
+      ctx.restore();
+
+      // Hex fill
+      hexPath();
+      const grad = ctx.createRadialGradient(cx - s*0.1, cy - s*0.1, 0, cx, cy, r);
+      grad.addColorStop(0, '#ffe566');
+      grad.addColorStop(1, '#e8a800');
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Hex border
+      hexPath();
+      ctx.strokeStyle = '#b8880a';
+      ctx.lineWidth = Math.max(1, s * 0.025);
+      ctx.stroke();
+
+      // ── Letter P ────────────────────────────────────────────────────────
+      const fontSz = Math.round(s * 0.52);
+      ctx.fillStyle = '#3a2800';
+      ctx.font = `900 ${fontSz}px "Arial Black", Arial, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('P', cx + s * 0.02, cy + s * 0.03);
+    }
+
+    // Render all sizes
+    ['c128', 'c48', 'c16'].forEach(id => {
+      drawIcon(document.getElementById(id));
+    });
+
+    // Download helpers
+    function downloadCanvas(canvas, filename) {
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function downloadAll() {
+      downloadCanvas(document.getElementById('c128'), 'icon128.png');
+      setTimeout(() => downloadCanvas(document.getElementById('c48'),  'icon48.png'),  300);
+      setTimeout(() => downloadCanvas(document.getElementById('c16'),  'icon16.png'),  600);
+    }
+  </script>
+</body>
+</html>
