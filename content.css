@@ -3,8 +3,8 @@
   position: fixed;
   top: 65px;
   /* sit just to the right of the 800px-centered game */
-  left: calc(50% + 410px);
-  right: 8px;
+  left: calc(50% + 400px);
+  right: 4px;
   width: auto;
   max-height: calc(100vh - 80px);
   overflow-y: auto;
@@ -185,4 +185,25 @@
   color: #2a8a3a;
   background: #e6f5e9;
   border: 1px solid #90cc98;
+}
+
+/* ── Zero states ───────────────────────────────────────────────────────── */
+
+/* Table cells (data, row sums, col sums) */
+.zero-cell,
+.zero-cell .updated-count {
+  color: #bbb !important;
+}
+
+/* Pair items (prefix2, prefix3, sufix3, subconjunts) */
+.pair-item.zero-item,
+.pair-item.zero-item .pair-count {
+  color: #bbb;
+}
+
+/* Length-count items (tutis, palindroms, quadrats)
+   Higher specificity needed to override .pistes-section ul li { color: #222 } */
+.pistes-section ul li.zero-item,
+.pistes-section ul li.zero-item .length-count {
+  color: #bbb;
 }

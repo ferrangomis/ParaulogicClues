@@ -80,10 +80,16 @@
     table.removeAttribute('id');
 
     if (table.rows.length > 0) {
+      const expectedCols = table.rows[0].cells.length;
       const headers = Array.from(table.rows[0].cells).map(c => c.textContent.trim());
+
       for (let r = 1; r < table.rows.length; r++) {
         const row    = table.rows[r];
         const letter = row.cells[0]?.textContent.trim();
+
+        // Trim any extra trailing cells the game adds to the Σ row
+        while (row.cells.length > expectedCols) row.deleteCell(row.cells.length - 1);
+
         if (!letter || letter === 'Σ') continue;
         for (let c = 1; c < row.cells.length; c++) {
           const len = parseInt(headers[c]);
@@ -309,6 +315,61 @@
     };
   }
 
+  // Read the visible number from a table cell (may be a span or plain text).
+  function getCellDisplayValue(cell) {
+    const span = cell.querySelector('.updated-count');
+    return parseInt(span ? span.textContent : cell.textContent) || 0;
+  }
+
+  // Recompute row sums (rightmost column) and column sums (bottom row) from
+  // the current displayed values. Called after every table update.
+  function recalcTableSums() {
+    const tableWrapper = sidebar?.querySelector('[data-section="table_graella"]');
+    if (!tableWrapper) return;
+    const table = tableWrapper.querySelector('table');
+    if (!table || table.rows.length < 2) return;
+
+    const totalCols = table.rows[0].cells.length;
+
+    // Locate the Σ sum row (first cell === 'Σ')
+    let sumRowIdx = -1;
+    for (let r = 1; r < table.rows.length; r++) {
+      if (table.rows[r].cells[0]?.textContent.trim() === 'Σ') {
+        sumRowIdx = r;
+        break;
+      }
+    }
+
+    // Update row sums — rightmost cell of each data row
+    for (let r = 1; r < table.rows.length; r++) {
+      if (r === sumRowIdx) continue;
+      const row = table.rows[r];
+      let sum = 0;
+      for (let c = 1; c < totalCols - 1; c++) sum += getCellDisplayValue(row.cells[c]);
+      const sumCell = row.cells[totalCols - 1];
+      sumCell.textContent = sum;
+      sumCell.classList.toggle('zero-cell', sum === 0);
+    }
+
+    if (sumRowIdx === -1) return;
+
+    // Update column sums and grand total
+    const sumRow     = table.rows[sumRowIdx];
+    let grandTotal   = 0;
+    for (let c = 1; c < totalCols - 1; c++) {
+      let sum = 0;
+      for (let r = 1; r < table.rows.length; r++) {
+        if (r === sumRowIdx) continue;
+        sum += getCellDisplayValue(table.rows[r].cells[c]);
+      }
+      sumRow.cells[c].textContent = sum;
+      sumRow.cells[c].classList.toggle('zero-cell', sum === 0);
+      grandTotal += sum;
+    }
+    sumRow.cells[totalCols - 1].textContent = grandTotal;
+    sumRow.cells[totalCols - 1].classList.toggle('zero-cell', grandTotal === 0);
+  }
+
   function applyUsage({ tableUsage, prefix2Usage, prefix3Usage, sufix3Usage, subconjuntsUsage, tutisUsage, palindromsUsage, quadratsUsage }) {
     if (!sidebar || !originalData) return;
 
@@ -318,12 +379,19 @@
       const original = originalData.table[letter]?.[len] ?? 0;
       const used     = tableUsage[`${letter}:${len}`] || 0;
       const remaining = original - used;
-      if (used > 0) {
+      if (remaining === 0) {
+        cell.textContent = '0';
+        cell.classList.add('zero-cell');
+      } else if (used > 0) {
         cell.innerHTML = `<span class="updated-count">${remaining}</span>`;
+        cell.classList.remove('zero-cell');
       } else {
         cell.textContent = String(original);
+        cell.classList.remove('zero-cell');
       }
     });
+
+    recalcTableSums();
 
     applyUsageToPairs('prefix2',     prefix2Usage,     originalData.prefix2);
     applyUsageToPairs('prefix3',     prefix3Usage,     originalData.prefix3);
@@ -348,7 +416,13 @@
       const countSpan = span.querySelector('.pair-count');
       if (!countSpan) return;
       countSpan.textContent = remaining;
-      countSpan.classList.toggle('updated-count', used > 0);
+      if (remaining === 0) {
+        countSpan.classList.remove('updated-count');
+        span.classList.add('zero-item');
+      } else {
+        span.classList.remove('zero-item');
+        countSpan.classList.toggle('updated-count', used > 0);
+      }
     });
   }
 
@@ -365,7 +439,13 @@
       const countSpan = li.querySelector('.length-count');
       if (!countSpan) return;
       countSpan.textContent = remaining;
-      countSpan.classList.toggle('updated-count', used > 0);
+      if (remaining === 0) {
+        countSpan.classList.remove('updated-count');
+        li.classList.add('zero-item');
+      } else {
+        li.classList.remove('zero-item');
+        countSpan.classList.toggle('updated-count', used > 0);
+      }
     });
   }
 
